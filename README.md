@@ -1,6 +1,6 @@
 # Ntropy MCP server
 
-MCP server for enriching banking data using the Ntropy API
+MCP server for enriching banking data using the Ntropy API. This allows LLM agents that work with financial data to easily call any of the Ntropy API endpoints.
 
 ## Components
 

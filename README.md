@@ -20,7 +20,7 @@ The server implements two tools:
 
 ### Install
 
-First, obtain your Ntropy API key by creating an account on [ntropy.com](https://ntropy.com). Make sure to replace `YOUR_NTROPY_API_KEY` below with your actual api key.
+First, obtain your Ntropy API key by creating an account on [ntropy.com](https://ntropy.com). Make sure to replace `YOUR_NTROPY_API_KEY` below with your actual API key.
 
 #### Run the server with uvx
 

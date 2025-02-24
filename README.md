@@ -1,4 +1,4 @@
-# ntropy-mcp MCP server
+# Ntropy MCP server
 
 MCP server for enriching banking data using the Ntropy API
 
@@ -20,7 +20,7 @@ The server implements two tools:
 
 ### Install
 
-First, obtain an Ntropy API key by creating an account on ntropy.com.
+First, obtain your Ntropy API key by creating an account on [ntropy.com](https://ntropy.com). Make sure to replace `YOUR_NTROPY_API_KEY` below with your actual api key.
 
 #### Run the server with uvx
 
@@ -33,13 +33,12 @@ uvx run ntropy-mcp --api-key YOUR_NTROPY_API_KEY
 The Claude Desktop configuration file is usually located at:
 
 On MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
+
 On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
 Add the following to the configuration file:
 
-<details>
-  <summary>Published Servers Configuration</summary>
-  ```
+```
   "mcpServers": {
     "ntropy-mcp": {
       "command": "uvx",
@@ -50,5 +49,4 @@ Add the following to the configuration file:
       ]
     }
   }
-  ```
-</details>
+ ```

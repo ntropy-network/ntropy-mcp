@@ -55,7 +55,7 @@ and the following if using docker:
 
 ```json
 "mcpServers": {
-  "time": {
+  "ntropy-mcp": {
     "command": "docker",
     "args": [
       "run",

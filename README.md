@@ -25,7 +25,7 @@ First, obtain your Ntropy API key by creating an account on [ntropy.com](https:/
 #### Run the server with uvx
 
 ```
-uvx run ntropy-mcp --api-key YOUR_NTROPY_API_KEY
+uvx ntropy-mcp --api-key YOUR_NTROPY_API_KEY
 ```
 
 #### Claude Desktop

@@ -36,9 +36,9 @@ On MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
 
 On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
-Add the following to the configuration file:
+Add the following to the configuration file if using uvx:
 
-```
+```json
   "mcpServers": {
     "ntropy-mcp": {
       "command": "uvx",
@@ -50,6 +50,44 @@ Add the following to the configuration file:
     }
   }
  ```
+
+and the following if using docker:
+
+```json
+"mcpServers": {
+  "time": {
+    "command": "docker",
+    "args": [
+      "run",
+      "-i",
+      "--rm",
+      "ntropy-mcp"
+      "--api-key",
+      "YOUR_NTROPY_API_KEY"
+    ]
+  }
+}
+```
+
+## Debugging
+
+You can use the MCP inspector to debug the server. For uvx installations:
+
+```bash
+npx @modelcontextprotocol/inspector uvx ntropy-mcp --api-key YOUR_NTROPY_API_KEY
+```
+
+## Build
+
+Docker build:
+
+```bash
+docker build -t ntropy-mcp .
+```
+
+## Contributing
+
+Pull requests are welcome! Feel free to contribute new ideas, bug fixes, or enhancements.
 
 ## License
 

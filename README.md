@@ -8,9 +8,20 @@ MCP server for enriching banking data using the Ntropy API. This allows LLM agen
 
 The server implements the following tools to interact with the Ntropy API:
 
+- **check_connection**: Verify connection to the Ntropy API
+  - Returns: Connection status information
+
+- **set_api_key**: Set or update the Ntropy API key at runtime
+  - Parameters: `api_key` (string)
+  - Returns: Status of the API key update and validation
+
 - **create_account_holder**: Create an account holder
   - Parameters: `id` (string/int), `type` (string), `name` (string)
   - Returns: The created account holder details
+
+- **update_account_holder**: Update an existing account holder
+  - Parameters: `id` (string/int), `name` (string, optional), `type` (string, optional)
+  - Returns: The updated account holder details
 
 - **enrich_transaction**: Enrich a bank transaction
   - Parameters: `id` (string/int), `description` (string), `date` (string), `amount` (float), `entry_type` (string), `currency` (string), `account_holder_id` (string/int), `country` (string, optional)
@@ -91,6 +102,72 @@ and the following if using docker:
     ]
   }
 }
+```
+
+## Example Usage
+
+### Check Connection
+
+```python
+# Check if your API key is valid and the Ntropy API is accessible
+connection_status = check_connection()
+print(connection_status)
+```
+
+### Create and Update Account Holders
+
+```python
+# Create a new account holder
+account_holder = create_account_holder(
+    id="user123",
+    type="individual",
+    name="John Doe"
+)
+
+# Update an existing account holder
+updated_account = update_account_holder(
+    id="user123",
+    name="John Smith"
+)
+```
+
+### Enrich Transactions
+
+```python
+# Enrich a single transaction
+enriched_transaction = enrich_transaction(
+    id="tx123",
+    description="AMAZON.COM*MK1AB6TE1",
+    date="2023-05-15",
+    amount=-29.99,
+    entry_type="debit",
+    currency="USD",
+    account_holder_id="user123",
+    country="US"
+)
+
+# Bulk enrich multiple transactions
+transactions = [
+    {
+        "id": "tx124",
+        "description": "NETFLIX.COM",
+        "date": "2023-05-16",
+        "amount": -13.99,
+        "entry_type": "debit",
+        "currency": "USD",
+        "account_holder_id": "user123"
+    },
+    {
+        "id": "tx125",
+        "description": "Starbucks Coffee",
+        "date": "2023-05-17",
+        "amount": -5.65,
+        "entry_type": "debit",
+        "currency": "USD",
+        "account_holder_id": "user123"
+    }
+]
+enriched_transactions = bulk_enrich_transactions(transactions)
 ```
 
 ## Debugging

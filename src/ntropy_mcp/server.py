@@ -36,7 +36,21 @@ def create_account_holder(
     type: str,
     name: str
 ) -> dict:
-    """Create an account holder"""
+    """Create an account holder in Ntropy API
+    
+    Creates a new account holder entity which can be associated with transactions.
+    An account holder represents an individual or business with a financial account.
+    
+    Parameters:
+        id: Unique identifier for the account holder (will be converted to string)
+        type: Type of account holder - must be one of: 'individual', 'business'
+        name: Display name for the account holder
+        
+    Returns:
+        dict: JSON response from API containing the created account holder information
+            On success, includes 'id', 'name', 'type', and other account holder details
+            On failure, includes 'status', 'status_code', 'message', and 'details'
+    """
     url = "https://api.ntropy.com/v3/account_holders"
     headers = {
         "Content-Type": "application/json",
@@ -62,8 +76,27 @@ def enrich_transaction(
     account_holder_id: str | int,
     country: str = None,
 ) -> dict:
-    """Enrich a bank transaction"""
-
+    """Enrich a single bank transaction using Ntropy API
+    
+    Sends transaction data to Ntropy for categorization and enrichment, returning
+    detailed information about the transaction including merchant name, category,
+    industry, and more.
+    
+    Parameters:
+        id: Unique identifier for the transaction (will be converted to string)
+        description: Transaction description as it appears on the bank statement
+        date: Transaction date in ISO 8601 format (YYYY-MM-DD)
+        amount: Transaction amount (positive for credit, negative for debit)
+        entry_type: Transaction type - must be one of: 'credit', 'debit'
+        currency: Three-letter currency code (e.g., 'USD', 'EUR', 'GBP')
+        account_holder_id: ID of the account holder who made the transaction
+        country: Optional two-letter country code (e.g., 'US', 'GB')
+        
+    Returns:
+        dict: JSON response from API containing the enriched transaction data
+            On success, includes categorization, merchant details, and confidence scores
+            On failure, includes 'status', 'status_code', 'message', and 'details'
+    """
     url = "https://api.ntropy.com/v3/transactions"
     headers = {
         "Content-Type": "application/json",
@@ -88,7 +121,18 @@ def enrich_transaction(
 
 @mcp.tool()
 def get_account_holder(account_holder_id: str | int) -> dict:
-    """Get details of an account holder"""
+    """Get details of an existing account holder
+    
+    Retrieves complete information for an account holder by their ID.
+    
+    Parameters:
+        account_holder_id: ID of the account holder to retrieve (will be converted to string)
+        
+    Returns:
+        dict: JSON response from API containing account holder information
+            On success, includes 'id', 'name', 'type', and other account details
+            On failure, includes 'status', 'status_code', 'message', and 'details'
+    """
     url = f"https://api.ntropy.com/v3/account_holders/{account_holder_id}"
     headers = {
         "Accept": "application/json",
@@ -103,7 +147,20 @@ def list_transactions(
     limit: int = 10,
     offset: int = 0
 ) -> dict:
-    """List transactions for an account holder"""
+    """List transactions for a specific account holder
+    
+    Retrieves a paginated list of transactions associated with an account holder.
+    
+    Parameters:
+        account_holder_id: ID of the account holder whose transactions to retrieve
+        limit: Maximum number of transactions to return (default: 10, max: 100)
+        offset: Number of transactions to skip for pagination (default: 0)
+        
+    Returns:
+        dict: JSON response from API containing transaction list
+            On success, includes 'data' array of transactions and pagination information
+            On failure, includes 'status', 'status_code', 'message', and 'details'
+    """
     url = f"https://api.ntropy.com/v3/transactions"
     headers = {
         "Accept": "application/json",
@@ -119,7 +176,18 @@ def list_transactions(
 
 @mcp.tool()
 def get_transaction(transaction_id: str | int) -> dict:
-    """Get details of a specific transaction"""
+    """Get details of a specific transaction
+    
+    Retrieves complete information for a single transaction by its ID.
+    
+    Parameters:
+        transaction_id: ID of the transaction to retrieve (will be converted to string)
+        
+    Returns:
+        dict: JSON response from API containing detailed transaction information
+            On success, includes all transaction fields and enrichment data
+            On failure, includes 'status', 'status_code', 'message', and 'details'
+    """
     url = f"https://api.ntropy.com/v3/transactions/{transaction_id}"
     headers = {
         "Accept": "application/json",
@@ -130,7 +198,27 @@ def get_transaction(transaction_id: str | int) -> dict:
 
 @mcp.tool()
 def bulk_enrich_transactions(transactions: List[Dict[str, Any]]) -> dict:
-    """Enrich multiple transactions at once"""
+    """Enrich multiple transactions in a single API call
+    
+    Processes a batch of transactions for efficiency when dealing with multiple records.
+    Each transaction must contain the same fields as required by the enrich_transaction tool.
+    
+    Parameters:
+        transactions: List of transaction dictionaries, each containing:
+            - id: Unique identifier (string or int, will be converted to string)
+            - description: Transaction description
+            - date: Transaction date (YYYY-MM-DD)
+            - amount: Transaction amount
+            - entry_type: 'credit' or 'debit'
+            - currency: Three-letter currency code
+            - account_holder_id: ID of the associated account holder
+            - location: Optional dict with 'country' field
+        
+    Returns:
+        dict: JSON response from API containing batch processing results
+            On success, includes array of processed transactions with enrichment data
+            On failure, includes 'status', 'status_code', 'message', and 'details'
+    """
     url = "https://api.ntropy.com/v3/transactions/bulk"
     headers = {
         "Content-Type": "application/json",
@@ -151,7 +239,19 @@ def bulk_enrich_transactions(transactions: List[Dict[str, Any]]) -> dict:
 
 @mcp.tool()
 def delete_account_holder(account_holder_id: str | int) -> dict:
-    """Delete an account holder and all associated data"""
+    """Delete an account holder and all associated data
+    
+    Permanently removes an account holder and all of their transactions from Ntropy.
+    This action cannot be undone.
+    
+    Parameters:
+        account_holder_id: ID of the account holder to delete (will be converted to string)
+        
+    Returns:
+        dict: JSON response from API confirming deletion
+            On success, includes confirmation message
+            On failure, includes 'status', 'status_code', 'message', and 'details'
+    """
     url = f"https://api.ntropy.com/v3/account_holders/{account_holder_id}"
     headers = {
         "Accept": "application/json",
@@ -162,7 +262,19 @@ def delete_account_holder(account_holder_id: str | int) -> dict:
 
 @mcp.tool()
 def delete_transaction(transaction_id: str | int) -> dict:
-    """Delete a specific transaction"""
+    """Delete a specific transaction
+    
+    Permanently removes a transaction from Ntropy.
+    This action cannot be undone.
+    
+    Parameters:
+        transaction_id: ID of the transaction to delete (will be converted to string)
+        
+    Returns:
+        dict: JSON response from API confirming deletion
+            On success, includes confirmation message
+            On failure, includes 'status', 'status_code', 'message', and 'details'
+    """
     url = f"https://api.ntropy.com/v3/transactions/{transaction_id}"
     headers = {
         "Accept": "application/json",

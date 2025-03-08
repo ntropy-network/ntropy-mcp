@@ -6,15 +6,39 @@ MCP server for enriching banking data using the Ntropy API. This allows LLM agen
 
 ### Tools
 
-The server implements two tools:
-- create_account_holder: Create an account holder using the Ntropy API
-  - Takes "id", "type", "name" as required string arguments
-  - Returns the created account holder
-- enrich_transaction: Enrich a transaction using the Ntropy API
-  - Takes "id", "description", "date", "amount", "entry_type", "currency",
-  "account_holder_id" as required string arguments, and "country" as an optional
-  argument
-  - Returns the enriched transaction
+The server implements the following tools to interact with the Ntropy API:
+
+- **create_account_holder**: Create an account holder
+  - Parameters: `id` (string/int), `type` (string), `name` (string)
+  - Returns: The created account holder details
+
+- **enrich_transaction**: Enrich a bank transaction
+  - Parameters: `id` (string/int), `description` (string), `date` (string), `amount` (float), `entry_type` (string), `currency` (string), `account_holder_id` (string/int), `country` (string, optional)
+  - Returns: The enriched transaction data
+
+- **get_account_holder**: Get details of an account holder
+  - Parameters: `account_holder_id` (string/int)
+  - Returns: Account holder details
+
+- **list_transactions**: List transactions for an account holder
+  - Parameters: `account_holder_id` (string/int), `limit` (int, default=10), `offset` (int, default=0)
+  - Returns: List of transactions
+
+- **get_transaction**: Get details of a specific transaction
+  - Parameters: `transaction_id` (string/int)
+  - Returns: Transaction details
+
+- **bulk_enrich_transactions**: Enrich multiple transactions at once
+  - Parameters: `transactions` (List of transaction objects)
+  - Returns: List of enriched transactions
+
+- **delete_account_holder**: Delete an account holder and all associated data
+  - Parameters: `account_holder_id` (string/int)
+  - Returns: Deletion status
+
+- **delete_transaction**: Delete a specific transaction
+  - Parameters: `transaction_id` (string/int)
+  - Returns: Deletion status
 
 ## Quickstart
 

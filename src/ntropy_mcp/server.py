@@ -83,7 +83,10 @@ def check_connection(ctx: Context) -> dict:
             "message": "No API key configured. Please set an API key first."
         }
     
-    headers = {"Accept": "application/json", "X-API-Key": API_KEY}
+    headers = {
+        "Accept": "application/json",
+        "X-API-Key": API_KEY
+    }
     try:
         response = requests.get("https://api.ntropy.com/v3/status", headers=headers)
         response_data = handle_api_response(response, ctx)

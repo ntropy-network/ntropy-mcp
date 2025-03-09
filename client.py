@@ -9,7 +9,6 @@ from mcp.client.stdio import stdio_client
 
 from dotenv import load_dotenv
 
-# Load environment variables from .env file if it exists
 load_dotenv()
 
 class NtropyMCPClient:
@@ -20,22 +19,15 @@ class NtropyMCPClient:
         self.session: Optional[ClientSession] = None
         self.exit_stack = AsyncExitStack()
         
-    async def connect_to_server(self, server_command: str = "uvx", server_args: List[str] = None):
-        """Connect to the Ntropy MCP server
+    async def connect_to_server(self):
+        """Connect to the Ntropy MCP server using uvx"""
         
-        Args:
-            server_command: Command to run the server (default: "uvx")
-            server_args: Arguments for the server command
-        """
-        if server_args is None:
-            server_args = []
-            
-        print(f"Connecting to server: {server_command} {' '.join(server_args)}")
+        api_key = os.environ.get("NTROPY_API_KEY")
         
-        # Create server parameters for stdio connection
+        # Create server parameters
         server_params = StdioServerParameters(
-            command=server_command,
-            args=server_args,
+            command="uvx",
+            args=["ntropy-mcp", "--api-key", api_key],
             env=None
         )
         
@@ -122,30 +114,13 @@ class NtropyMCPClient:
         """Clean up resources"""
         await self.exit_stack.aclose()
 
-async def run_demo():
+async def run():
     """Run a demonstration of the Ntropy MCP client"""
-    # Use API key from environment variable if available
-    api_key = os.environ.get("NTROPY_API_KEY")
-    
-    # Default server configuration
-    server_command = "uvx"
-    server_args = ["ntropy-mcp"]
-    
-    # Add API key if available
-    if api_key:
-        server_args.extend(["--api-key", api_key])
-    else:
-        print("Warning: No NTROPY_API_KEY found in environment variables.")
-        print("Please set this environment variable or add --api-key to the server arguments.")
-    
-    print("=== Ntropy MCP Client Demo ===")
-    print(f"Server command: {server_command} {' '.join(server_args)}")
-    
     client = NtropyMCPClient()
     
     try:
-        # Connect to the server
-        await client.connect_to_server(server_command, server_args)
+        # Connect to the server using uvx
+        await client.connect_to_server()
         
         # Check connection to Ntropy API
         print("\n1. Checking connection to Ntropy API...")
@@ -203,13 +178,11 @@ async def run_demo():
         print("\n5. Listing transactions for account holder...")
         await client.list_transactions(account_holder_id)
         
-        print("\nDemo completed successfully!")
-        
     except Exception as e:
-        print(f"\nError during demo: {str(e)}")
+        print(f"\nError: {str(e)}")
     finally:
         # Clean up resources
         await client.cleanup()
 
 if __name__ == "__main__":
-    asyncio.run(run_demo()) 
+    asyncio.run(run()) 
